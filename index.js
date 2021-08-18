@@ -5,7 +5,7 @@ const HOST = '0.0.0.0'
 
 const api = express()
 api.get('/', (req, res) => {
-  res.send('PROD-107\n')
+  res.send(`PROD-107: ${process.env.DB_HOST}`)
 })
 
 api.listen(PORT, HOST)
