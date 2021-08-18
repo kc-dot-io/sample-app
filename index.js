@@ -8,12 +8,17 @@ let connection = mysql.createConnection({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
     password: process.env.DB_PASS,
+    port: process.env.DB_PORT,
     database: 'dev'
 });
 
+console.log(process.env.DB_HOST)
+console.log(process.env.DB_USER)
+console.log(process.env.DB_PORT)
+
 connection.connect(function(err) {
   if (err) {
-    return console.error('error: ' + err.message);
+    return console.error('MySQL connection error: ' + err.message);
   }
 
   console.log('Connected to the MySQL server successfully');
@@ -21,7 +26,7 @@ connection.connect(function(err) {
 
 const api = express()
 api.get('/', (req, res) => {
-  res.send(`PROD-107: ${process.env.DB_HOST}`)
+  res.send('PROD-110\n')
 })
 
 api.listen(PORT, HOST)
