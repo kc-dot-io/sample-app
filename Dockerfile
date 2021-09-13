@@ -1,13 +1,13 @@
-FROM mhart/alpine-node:12
+FROM registry.cto.ai/official_images/node:2-12.13.1-stretch-slim
 
-WORKDIR /src/api
+WORKDIR /ops
 
 COPY package.json ./
 COPY yarn.lock ./
 
 RUN yarn install
 
-COPY . .
+ADD . .
 
-EXPOSE 3000
+EXPOSE 8080
 CMD ["node", "index.js"]
