@@ -1,7 +1,7 @@
 const express = require('express')
 const mysql = require('mysql')
 
-const PORT = 3000
+const PORT = proces.env.PORT || 3000
 const HOST = '0.0.0.0'
 
 console.log(process.env.DB_HOST)
