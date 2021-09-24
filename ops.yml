@@ -1,0 +1,21 @@
+services:
+  - name: sample-app:0.3.0
+    description: preview of sample app
+    run: node index.js
+    port: [ '8080:8080' ]
+    domain: ""
+    env:
+      static:
+        - PORT=8080
+        - DB_HOST=localhost
+        - DB_PORT=3600
+        - DB_USER=fake
+      secrets:
+        - SLACK_SIGNING_SECRET
+        - SLACK_BOT_TOKEN
+    events:
+     - "github:kc-dot-io/sample-app:pull_request.merged"
+    trigger:
+     - build
+     - publish
+     - start
