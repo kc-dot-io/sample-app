@@ -4,10 +4,7 @@ const mysql = require('mysql')
 const PORT = process.env.PORT || 3000
 const HOST = '0.0.0.0'
 
-console.log(process.env.DB_HOST)
-console.log(process.env.DB_USER)
-console.log(process.env.DB_PORT)
-
+console.log(process.env)
 /*
 let connection = mysql.createConnection({
     host: process.env.DB_HOST,
@@ -27,7 +24,7 @@ connection.connect(function(err) {
 */
 const api = express()
 api.get('/', (req, res) => {
-  res.send('PROD-119\n')
+  res.send('PROD-120\n')
 })
 
 api.listen(PORT, HOST)
