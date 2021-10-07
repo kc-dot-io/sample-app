@@ -27,7 +27,7 @@ connection.connect(function(err) {
 */
 const api = express()
 api.get('/', (req, res) => {
-  res.send('PROD-118\n')
+  res.send('PROD-119\n')
 })
 
 api.listen(PORT, HOST)
