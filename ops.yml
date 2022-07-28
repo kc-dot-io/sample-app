@@ -1,5 +1,6 @@
+version: 1
 services:
-  - name: sample-app:0.3.0
+  - name: sample-app:0.32.0
     description: preview of sample app
     run: node index.js
     port: [ '8080:8080' ]
@@ -14,6 +15,8 @@ services:
         - SLACK_SIGNING_SECRET
         - SLACK_BOT_TOKEN
     events:
+     - "github:kc-dot-io/sample-app:pull_request.opened"
+     - "github:kc-dot-io/sample-app:pull_request.synchronize"
      - "github:kc-dot-io/sample-app:pull_request.merged"
     trigger:
      - build
