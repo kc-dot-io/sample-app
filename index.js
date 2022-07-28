@@ -8,7 +8,7 @@ console.log(process.env)
 
 const api = express()
 api.get('/', (req, res) => {
-  res.send('PROD-144\n')
+  res.send('PROD-145\n')
 })
 
 api.listen(PORT, HOST)
