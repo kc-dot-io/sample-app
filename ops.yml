@@ -1,44 +1,42 @@
-version: 1
+version: "1"
 services:
   - name: sample-app:0.32.0
-    description: preview of sample app
-    run: node index.js
+    description: A sample expressjs service
+    run: node /ops/index.js
     port: [ '8080:8080' ]
     domain: ""
     env:
       static:
         - PORT=8080
-        - DB_HOST=localhost
-        - DB_PORT=3600
-        - DB_USER=fake
-      secrets:
-        - SLACK_SIGNING_SECRET
-        - SLACK_BOT_TOKEN
-    events:
-     - "github:kc-dot-io/sample-app:pull_request.opened"
-     - "github:kc-dot-io/sample-app:pull_request.synchronize"
-     - "github:kc-dot-io/sample-app:pull_request.merged"
-    trigger:
-     - build
-     - publish
-     - start
+    # events:
+      # - "github:kc-dot-io/sample-app:pull_request.merged"
+      # - "github:kc-dot-io/sample-app:pull_request.opened"
+    # trigger:
+     # - build
+     # - publish
+     # - start
 pipelines:
-  - name: sample-app-pipeline:0.1.0
-    description: build a release for deployment on fargate
+  - name: sample-app-pipeline:0.1.2
+    description: build a release for deployment
     env:
       static:
         - DEBIAN_FRONTEND=noninteractive
+        - ORG=kc-dot-io
+        - REPO=sample-app
+        - AWS_REGION=us-west-1
+        - STACK_TYPE=aws-eks-ec2-asg-cdk
       secrets:
         - GITHUB_TOKEN
         - AWS_ACCESS_KEY_ID
         - AWS_SECRET_ACCESS_KEY
         - AWS_ACCOUNT_NUMBER
     events:
-      - "github:kc-dot-io/sample-app:pull_request.merged" 
-      - "github:kc-dot-io/sample-app:create.tag" 
+      - "github:kc-dot-io/sample-app:pull_request.merged"
+      - "github:kc-dot-io/sample-app:pull_request.opened"
+      - "github:kc-dot-io/sample-app:pull_request.synchronize"
     jobs:
       - name: sample-app-build-job
-        description: example build step
+        description: sample-app build step
         packages:
           - git
           - unzip
@@ -50,7 +48,7 @@ pipelines:
           - aws --version
           - git clone https://$GITHUB_TOKEN:x-oauth-basic@github.com/$ORG/$REPO
           - cd $REPO && ls -asl
-          - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin $AWS_ACCOUNT_NUMBER.dkr.ecr.us-east-1.amazonaws.com/$REPO
-          - docker build -t $AWS_ACCOUNT_NUMBER.dkr.ecr.us-east-1.amazonaws.com/$REPO:$REF .
-          - docker push $AWS_ACCOUNT_NUMBER.dkr.ecr.us-east-1.amazonaws.com/$REPO:$REF
-
+          - git fetch && git checkout $REF
+          - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_NUMBER.dkr.ecr.$AWS_REGION.amazonaws.com/$REPO
+          - docker build -f Dockerfile -t $AWS_ACCOUNT_NUMBER.dkr.ecr.$AWS_REGION.amazonaws.com/$REPO-$STACK_TYPE:$REF .
+          - docker push $AWS_ACCOUNT_NUMBER.dkr.ecr.$AWS_REGION.amazonaws.com/$REPO-$STACK_TYPE:$REF
